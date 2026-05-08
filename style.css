@@ -404,6 +404,7 @@ html, body {
   color: var(--accent);
 }
 .splash-year { color: var(--accent2); font-family: 'Bungee Shade', cursive; }
+.splash-ver { color: var(--accent3); font-family: 'Bungee Shade', cursive; font-size: 1.75rem; }
 
 .splash-spinner { position: relative; width: 48px; height: 48px; }
 .splash-ring {
