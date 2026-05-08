@@ -4,7 +4,7 @@
 
 export const FIREBASE_CONFIG = {
   apiKey: "AIzaSyC7tidcBNCDDQMMgRXrZrPmWqOB2y2e3VU",
-  authDomain: "web-retro-platform.firebaseapp.com",
+  authDomain: "web-retro-platform.netlify.app",
   projectId: "web-retro-platform",
   storageBucket: "web-retro-platform.firebasestorage.app",
   messagingSenderId: "914342980305",
