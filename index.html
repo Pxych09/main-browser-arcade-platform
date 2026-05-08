@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fruit Game 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12942/12942473.png" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── SPLASH / LOADING SCREEN ───────────────────── -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <span class="splash-icon">👾</span>
+        <h1 class="splash-title">BROWSER<br>ARCADE <br><span class="splash-year">PLATFORM</span><br><span class="splash-year">2026</span></h1>
+      </div>
+      <div class="splash-spinner">
+        <div class="splash-ring"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AUTH SCREEN ─────────────────────────────────── -->
+  <div id="screen-auth" class="screen">
+    <div class="auth-bg-grid"></div>
+
+    <div class="auth-card">
+      <div class="logo-wrap">
+        <span class="logo-icon">🎰</span>
+        <h1 class="logo-title">FRUIT<br>GAME<br><span class="logo-year">2026</span></h1>
+      </div>
+      <p class="auth-tagline">Sign in with Google to play — instant, no password needed.</p>
+      <button id="btn-google-signin" class="btn btn-google">
+        <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continue with Google
+      </button>
+      <div id="auth-error" class="auth-msg error hidden"></div>
+    </div>
+
+    <div class="floating-fruits" aria-hidden="true">
+      <span>🍒</span><span>🥭</span><span>🍎</span><span>🍍</span><span>🍫</span>
+      <span>🍒</span><span>🥭</span><span>🍎</span><span>🍍</span><span>🍫</span>
+    </div>
+  </div>
+
+  <!-- ── DASHBOARD ───────────────────────────────────── -->
+  <div id="screen-dashboard" class="screen">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <img id="hdr-avatar" class="avatar" src="" alt="" style="display:none" />
+        <div class="nickname-wrap">
+          <span class="nickname-display" id="dash-nickname-display" title="Click to edit your name"></span>
+          <button class="nickname-edit-btn" id="dash-nickname-edit-btn" title="Edit name">✏️</button>
+          <input class="nickname-input hidden" id="dash-nickname-input" maxlength="20" placeholder="Your nickname…" />
+          <button class="nickname-save-btn hidden" id="dash-nickname-save-btn" title="Save">✓</button>
+        </div>
+      </div>
+      <div class="top-bar-center">
+        <span class="credits-label">CREDITS</span>
+        <span id="hdr-credits" class="credits-val">—</span>
+      </div>
+      <div class="top-bar-right">
+        <span id="hdr-email" class="user-email">—</span>
+        <button id="btn-logout" class="btn btn-sm">Logout</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- ── DASHBOARD LEADERBOARD ── -->
+      <section class="dash-leaderboard">
+        <div class="dash-lb-header">
+          <div class="dash-lb-title-row">
+            <span class="dash-lb-icon">🏆</span>
+            <h2 class="dash-lb-title">LEADERBOARD</h2>
+            <span id="dash-lb-user-count" class="lb-user-count">— players</span>
+          </div>
+          <div class="lb-tabs">
+            <button id="lb-tab-credits"  class="lb-tab lb-tab-active">💰 Overall Credits</button>
+            <button id="lb-tab-popmatch" class="lb-tab">🃏 Pop Match</button>
+          </div>
+        </div>
+        <div id="dash-leaderboard-list" class="dash-leaderboard-list">
+          <div class="lb-loading">Loading…</div>
+        </div>
+      </section>
+
+      <h2 class="dash-title">CHOOSE A GAME</h2>
+      <div class="game-cards">
+        <div class="game-card active">
+          <div class="game-card-badge">PLAY NOW</div>
+          <div class="game-card-icon">🎰</div>
+          <h3>Fruit Game</h3>
+          <p>Spin the border grid &amp; win fruit prizes!</p>
+          <button class="btn btn-primary" id="btn-play-fruit">Play</button>
+        </div>
+        <div class="game-card active">
+          <div class="game-card-badge">PLAY NOW</div>
+          <div class="game-card-icon">🃏</div>
+          <h3>Pop Match</h3>
+          <p>Flip cards, chain combos, and earn credits stage by stage!</p>
+          <button class="btn btn-primary" id="btn-play-match">Play</button>
+        </div>
+        <div class="game-card active">
+          <div class="game-card-badge">PLAY NOW</div>
+          <div class="game-card-icon">🎰</div>
+          <h3>Lucky 777</h3>
+          <p>Classic 3-reel slots. Pick your bet, spin the reels, hit the jackpot!</p>
+          <button class="btn btn-primary" id="btn-play-lucky777">Play</button>
+        </div>
+        <div class="game-card coming-soon">
+          <div class="game-card-badge soon">SOON</div>
+          <div class="game-card-icon">👻</div>
+          <h3>Coming Soon</h3>
+          <p>Coming Soon.</p>
+          <button class="btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+
+        <!-- ═══════════════════════════════════════════════════
+     ABOUT THE GAMES — place this inside <main class="dashboard">
+     after the .game-cards div
+     ═══════════════════════════════════════════════════ -->
+
+    <section class="about-section">
+      <h2 class="about-heading">ABOUT THE GAMES</h2>
+
+      <!-- ── GAME 1: FRUIT GAME ── -->
+      <article class="about-card" id="about-fruit-game">
+        <div class="about-card-header">
+          <div class="about-card-num">01</div>
+          <div class="about-card-title-wrap">
+            <span class="about-card-icon">🎰</span>
+            <div>
+              <h3 class="about-card-title">Fruit Game</h3>
+              <span class="about-card-tag">Free to Play · Luck-Based · Arcade</span>
+            </div>
+          </div>
+          <span class="about-card-status live">LIVE</span>
+        </div>
+
+        <p class="about-card-desc">
+          A retro arcade slot game where luck is everything. Sign in with Google, grab your
+          <strong>100 free starting credits</strong>, and start spinning. Each spin costs
+          <strong>5 credits</strong> — land on a fruit to collect its value, or hit a 💣 bomb
+          and walk away with nothing. Simple. Addictive. Free.
+        </p>
+
+        <div class="about-mechanic-grid">
+          <div class="about-mechanic about-mechanic-outline">
+            <div>
+              <span class="mechanic-label">What keeps it fun</span>
+              <span class="mechanic-text"><strong>The Tension Loop</strong> — every spin costs 5 but most wins return less than 5, so your credits slowly drain unless you hit a pineapple or better. That pressure is what makes each spin feel meaningful. You're always one good spin away from recovering.</span>
+              <br>
+              <span class="mechanic-text"><strong>The Jackpot Moment</strong> — landing 🍫 at ₱100 for a 5-credit bet is a 20x return. It's rare enough to feel genuinely exciting when it happens.</span>
+              <br>
+              <span class="mechanic-text"><strong>The Bomb</strong> — losing everything on a spin feels worse than gaining the equivalent feels good. That asymmetry is what makes the bomb psychologically effective without being unfair.</span>
+              <br>
+              <span class="mechanic-text"><strong>Daily Rewards</strong> — every 24 hours players get +100 free credits, meaning even if they go broke they can come back tomorrow. This removes frustration and keeps people returning.</span>
+              <br>
+              <span class="mechanic-text"><strong>The Leaderboard</strong> — credits accumulate globally, so there's a social layer. Players can see where they rank against everyone else, giving long-term motivation beyond individual spins.</span>
+            </div>
+          </div>
+          <div class="about-mechanic about-mechanic-outline">
+            <div>
+              <span class="mechanic-label">The core design philosophy 🧿</span>
+              <span class="mechanic-text">The game is built around low barrier, high replayability. Sign in once with Google, get credits instantly, start spinning. No tutorials, no menus, no friction. The spin animation (~4 seconds of the highlight traveling around the grid) builds anticipation without feeling slow. The sound design — ticks during the spin, a win tone, a low bomb sound — adds sensory feedback that makes outcomes feel satisfying or dramatic.</span>
+              <br>
+              <span class="mechanic-text">It's essentially a modern retro slot machine — the aesthetic (Bungee font, dark arcade palette, glowing cells) evokes classic arcade machines, but it runs entirely in the browser with real-time data synced to Firestore, so your credits, history, and leaderboard rank are persistent across devices and sessions.</span>
+            </div>
+          </div>
+          <div class="about-mechanic about-mechanic-outline">
+            <div>
+              <span class="mechanic-label">Who it's for</span>
+              <span class="mechanic-text">Anyone who enjoys casual games with a luck element — the kind you play for 5 minutes during a break. It's not skill-based, which lowers the entry barrier completely. The ₱ currency framing gives it a sense of real stakes without actual money involved.</span>
+            </div>
+          </div>
+          <div class="about-mechanic">
+            <span class="mechanic-icon">🎯</span>
+            <div>
+              <span class="mechanic-label">How to Win</span>
+              <span class="mechanic-text">The highlight travels the border grid and stops on a random fruit. Its value is added to your credits.</span>
+            </div>
+          </div>
+          <div class="about-mechanic">
+            <span class="mechanic-icon">⚖️</span>
+            <div>
+              <span class="mechanic-label">Weighted Odds</span>
+              <span class="mechanic-text">Not all fruits are equal. Cherries are common, the jackpot bar is rare. Every spin is a calculated gamble.</span>
+            </div>
+          </div>
+          <div class="about-mechanic">
+            <span class="mechanic-icon">🎁</span>
+            <div>
+              <span class="mechanic-label">Daily Rewards</span>
+              <span class="mechanic-text">Claim +100 free credits every 24 hours. Go broke? Come back tomorrow — the game always gives you another shot.</span>
+            </div>
+          </div>
+          <div class="about-mechanic">
+            <span class="mechanic-icon">🏆</span>
+            <div>
+              <span class="mechanic-label">Leaderboard</span>
+              <span class="mechanic-text">Your credits persist globally. Climb the ranks, hold the top spot, and let everyone know who spins best.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fruit prize table -->
+        <div class="about-prizes">
+          <span class="about-prizes-label">PRIZE TABLE</span>
+          <div class="prize-row">
+            <span class="prize-fruit">🍒</span><span class="prize-name">Cherry</span>
+            <div class="prize-bar-wrap"><div class="prize-bar" style="--w:45%"></div></div>
+            <span class="prize-val">₱1</span>
+            <span class="prize-odds">Common</span>
+          </div>
+          <div class="prize-row">
+            <span class="prize-fruit">🥭</span><span class="prize-name">Mango</span>
+            <div class="prize-bar-wrap"><div class="prize-bar" style="--w:18%"></div></div>
+            <span class="prize-val">₱3</span>
+            <span class="prize-odds">Uncommon</span>
+          </div>
+          <div class="prize-row">
+            <span class="prize-fruit">🍎</span><span class="prize-name">Apple</span>
+            <div class="prize-bar-wrap"><div class="prize-bar" style="--w:15%"></div></div>
+            <span class="prize-val">₱5</span>
+            <span class="prize-odds">Uncommon</span>
+          </div>
+          <div class="prize-row">
+            <span class="prize-fruit">🍍</span><span class="prize-name">Pineapple</span>
+            <div class="prize-bar-wrap"><div class="prize-bar" style="--w:12%"></div></div>
+            <span class="prize-val">₱10</span>
+            <span class="prize-odds">Rare</span>
+          </div>
+          <div class="prize-row jackpot-row">
+            <span class="prize-fruit">🍫</span><span class="prize-name">Jackpot Bar</span>
+            <div class="prize-bar-wrap"><div class="prize-bar jackpot-bar" style="--w:3%"></div></div>
+            <span class="prize-val jackpot-val">₱100</span>
+            <span class="prize-odds jackpot-odds">Jackpot</span>
+          </div>
+          <div class="prize-row bomb-row">
+            <span class="prize-fruit">💣</span><span class="prize-name">Bomb</span>
+            <div class="prize-bar-wrap"><div class="prize-bar bomb-bar" style="--w:7%"></div></div>
+            <span class="prize-val bomb-val">₱0</span>
+            <span class="prize-odds bomb-odds">Danger</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── GAME 2: POP MATCH ── -->
+    <article class="about-card" id="about-pop-match">
+      <div class="about-card-header">
+        <div class="about-card-num">02</div>
+        <div class="about-card-title-wrap">
+          <span class="about-card-icon">🃏</span>
+          <div>
+            <h3 class="about-card-title">Pop Match</h3>
+            <span class="about-card-tag">Free to Play · Skill-Based · Memory Arcade</span>
+          </div>
+        </div>
+        <span class="about-card-status live">LIVE</span>
+      </div>
+
+      <p class="about-card-desc">
+        A fast-paced memory arcade game where skill pays — literally. Sign in with Google,
+        flip face-down cards to reveal hidden symbols, and match pairs before the clock runs
+        out. No credits required to play. Instead, <strong>clearing a stage earns you
+        credits</strong> you can spend in other games. Five escalating stages, a combo
+        chain that multiplies your score, and a grid that grows wider as you advance.
+        How far can you go?
+      </p>
+
+      <div class="about-mechanic-grid">
+
+        <div class="about-mechanic about-mechanic-outline">
+          <div>
+            <span class="mechanic-label">What keeps it fun</span>
+            <span class="mechanic-text"><strong>The Combo Chain</strong> — every consecutive
+            match without a miss multiplies your score. Your first match scores 12 pts, your
+            second scores 24, your third 36, and so on. One miss resets the chain to zero,
+            which makes each flip feel genuinely tense.</span>
+            <br>
+            <span class="mechanic-text"><strong>The Memory Window</strong> — when you flip
+            a card that doesn't match, both cards stay visible for 680ms before flipping back.
+            That brief window is where the game is actually won or lost. Players who use it
+            to memorize positions will dramatically outperform players who don't.</span>
+            <br>
+            <span class="mechanic-text"><strong>The Stage Ladder</strong> — each stage adds
+            more pairs, cuts the timer, and from Stage 4 onward expands the grid to 5 columns.
+            Clearing Stage 1 feels easy. Clearing Stage 5 under a 43-second clock with
+            12 pairs on a 5×5 grid feels like a genuine achievement.</span>
+            <br>
+            <span class="mechanic-text"><strong>Credit Rewards</strong> — unlike Fruit Game,
+            Pop Match costs nothing to play. Skilled players earn credits on every stage
+            cleared — but only on a full clear. Running out of time mid-stage pays nothing.
+            Repeated full runs in the same day earn diminishing returns (60% → 30% → 10%),
+            so the biggest gains go to players who play well, not just often.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic about-mechanic-outline">
+          <div>
+            <span class="mechanic-label">The core design philosophy 🧿</span>
+            <span class="mechanic-text">Pop Match is built around the tension between
+            speed and accuracy. The timer pushes you to move fast. The combo system punishes
+            recklessness. These two forces are always pulling against each other, and finding
+            your personal rhythm between them is where the skill ceiling lives.</span>
+            <br>
+            <span class="mechanic-text">It's designed as the deliberate counterweight to
+            Fruit Game — where Fruit Game is pure luck and passive tension, Pop Match is pure
+            skill and active pressure. The two games share a credit economy but serve
+            completely different player moods. On a lucky day you spin. On a focused day
+            you match.</span>
+            <br>
+            <span class="mechanic-text">The arcade aesthetic — dark palette, glowing cards,
+            retro sound design — is shared with the rest of the platform intentionally.
+            Everything feels like it belongs in the same cabinet.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic about-mechanic-outline">
+          <div>
+            <span class="mechanic-label">Who it's for</span>
+            <span class="mechanic-text">Players who want to feel like their result was
+            earned, not rolled. If Fruit Game frustrates you because luck is out of your
+            hands, Pop Match is the antidote — every outcome here traces directly back to
+            a decision you made. It also rewards returning players more than new ones,
+            since spatial memory of symbol positions improves with familiarity.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic">
+          <span class="mechanic-icon">🧠</span>
+          <div>
+            <span class="mechanic-label">How to Win</span>
+            <span class="mechanic-text">Flip two cards per turn. Match the symbols to keep
+            them face-up. Clear all pairs before the timer hits zero to earn credits and
+            advance. Miss a pair and both cards flip back — no credits for incomplete stages.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic">
+          <span class="mechanic-icon">⚡</span>
+          <div>
+            <span class="mechanic-label">Combo Multiplier</span>
+            <span class="mechanic-text">Each consecutive match scores <strong>combo × 12
+            pts</strong> — first match = 12, second = 24, third = 36, and so on. One miss
+            resets the chain to zero. Chain everything for a massive score.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic">
+          <span class="mechanic-icon">💰</span>
+          <div>
+            <span class="mechanic-label">Earn Credits</span>
+            <span class="mechanic-text">Credits are paid per stage cleared. Repeated full
+            runs in the same day earn progressively less — 60% on your second run, 30% on
+            your third, 10% on the fourth and beyond. First run of the day always pays full.</span>
+          </div>
+        </div>
+
+        <div class="about-mechanic">
+          <span class="mechanic-icon">🏆</span>
+          <div>
+            <span class="mechanic-label">High Score Board</span>
+            <span class="mechanic-text">Your personal best is saved to your account and
+            appears on the global Pop Match leaderboard on the dashboard. Score is
+            determined by combo chains and stage completion bonuses.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Stage breakdown table -->
+      <div class="about-prizes">
+        <span class="about-prizes-label">STAGE BREAKDOWN</span>
+
+        <div class="prize-row">
+          <span class="prize-fruit">1️⃣</span>
+          <span class="prize-name">Stage 1</span>
+          <div class="prize-bar-wrap"><div class="prize-bar" style="--w:20%"></div></div>
+          <span class="prize-val" style="color:var(--win)">+2 cr</span>
+          <span class="prize-odds">4 pairs · 4×4 grid · 63s</span>
+        </div>
+
+        <div class="prize-row">
+          <span class="prize-fruit">2️⃣</span>
+          <span class="prize-name">Stage 2</span>
+          <div class="prize-bar-wrap"><div class="prize-bar" style="--w:35%"></div></div>
+          <span class="prize-val" style="color:var(--win)">+4 cr</span>
+          <span class="prize-odds">6 pairs · 4×4 grid · 58s</span>
+        </div>
+
+        <div class="prize-row">
+          <span class="prize-fruit">3️⃣</span>
+          <span class="prize-name">Stage 3</span>
+          <div class="prize-bar-wrap"><div class="prize-bar" style="--w:52%"></div></div>
+          <span class="prize-val" style="color:var(--win)">+7 cr</span>
+          <span class="prize-odds">8 pairs · 4×4 grid · 53s</span>
+        </div>
+
+        <div class="prize-row">
+          <span class="prize-fruit">4️⃣</span>
+          <span class="prize-name">Stage 4</span>
+          <div class="prize-bar-wrap"><div class="prize-bar" style="--w:72%"></div></div>
+          <span class="prize-val" style="color:var(--win)">+12 cr</span>
+          <span class="prize-odds">10 pairs · 5×4 grid · 48s</span>
+        </div>
+
+        <div class="prize-row jackpot-row">
+          <span class="prize-fruit">5️⃣</span>
+          <span class="prize-name">Stage 5 — Full Clear</span>
+          <div class="prize-bar-wrap"><div class="prize-bar jackpot-bar" style="--w:100%"></div></div>
+          <span class="prize-val jackpot-val">+20 cr</span>
+          <span class="prize-odds jackpot-odds">12 pairs · 5×4 grid · 43s</span>
+        </div>
+
+        <div class="prize-row" style="margin-top:6px; border-top: 1px solid var(--border); padding-top:10px;">
+          <span class="prize-fruit">📉</span>
+          <span class="prize-name">Repeat Runs</span>
+          <div class="prize-bar-wrap"><div class="prize-bar" style="--w:100%; background:var(--muted)"></div></div>
+          <span class="prize-val" style="color:var(--muted)">↓ 60/30/10%</span>
+          <span class="prize-odds">2nd / 3rd / 4th+ run today</span>
+        </div>
+
+      </div>
+    </article>
+
+      <!-- ── GAME 3: CARD FLIP (coming soon) ── -->
+      <article class="about-card about-card-soon">
+        <div class="about-card-header">
+          <div class="about-card-num">03</div>
+          <div class="about-card-title-wrap">
+            <span class="about-card-icon">👻</span>
+            <div>
+              <h3 class="about-card-title">Coming Soon</h3>
+              <span class="about-card-tag">Coming Soon</span>
+            </div>
+          </div>
+          <span class="about-card-status soon">SOON</span>
+        </div>
+        <p class="about-card-desc">
+          Coming Soon. Stay tuned!
+        </p>
+      </article>
+    </section>
+      
+    </main>
+  </div>
+
+  <!-- ── FRUIT GAME ──────────────────────────────────── -->
+  <div id="screen-game" class="screen">
+    <header class="top-bar">
+      <!-- LEFT: back + nickname -->
+      <div class="top-bar-left">
+        <button id="btn-back" class="btn btn-sm">Back</button>
+        <div class="nickname-wrap">
+          <span class="nickname-display" id="game-nickname-display" title="Click to edit"></span>
+          <button class="nickname-edit-btn" id="game-nickname-edit-btn" title="Edit name">✏️</button>
+          <input class="nickname-input hidden" id="game-nickname-input" maxlength="20" placeholder="Your nickname…" />
+          <button class="nickname-save-btn hidden" id="game-nickname-save-btn" title="Save">✓</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: credits pill + hamburger -->
+      <div class="top-bar-right">
+        <div class="credits-pill">
+          <span class="credits-label">CREDITS</span>
+          <span id="game-credits" class="credits-val">—</span>
+        </div>
+        <div class="menu-btn" id="game-menu-btn" title="Menu" role="button" aria-label="Open menu">
+          ☰
+          <div class="menu-dropdown hidden" id="game-menu-dropdown">
+            <div class="menu-dropdown-email" id="game-email">—</div>
+            <button id="btn-logout2" class="btn btn-sm">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Side-panel layout wrapper -->
+    <div class="game-layout">
+
+      <!-- ── LEFT: HISTORY PANEL ── -->
+      <aside class="history-panel">
+<!-- Leaderboard lives on dashboard; keep this hidden anchor for renderAll -->
+        <div id="leaderboard-list" style="display:none"></div>
+        <div class="stat-divider"></div>
+
+        <div class="history-panel-header">
+          <h3 class="history-panel-title">📅 Today's Activity</h3>
+          <span id="history-count" class="history-count-badge" hidden>0</span>
+        </div>
+
+        <!-- TODAY stats -->
+        <div class="stat-day-block">
+          <!-- <div class="stat-day-label">📅 Today</div> -->
+          <div class="stat-day-label">
+            <div class="daily-reward"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-box">
+              <span class="stat-label">Total Spins</span>
+              <span id="stat-today-spins" class="stat-value">—</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Total Collected</span>
+              <span id="stat-today-won" class="stat-value">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div id="history-list" class="history-list"></div>
+        <div id="history-empty" class="history-empty">
+          <span>🎰</span>
+          <p>No spins yet.<br>Roll to start!</p>
+        </div>
+      </aside>
+
+      <!-- ── RIGHT: GAME AREA ── -->
+      <div class="game-area">
+        <h2 class="game-title">🎰 FRUIT SPIN</h2>
+
+        <div id="result-display" class="result-display hidden">
+          <span id="result-text"></span>
+        </div>
+
+        <div class="grid-wrapper">
+          <div id="fruit-grid" class="fruit-grid"></div>
+        </div>
+
+        <div class="spin-legend">
+          <span>🍒 = ₱1</span>
+          <span>🥭 = ₱3</span>
+          <span>🍎 = ₱5</span>
+          <span>🍍 = ₱10</span>
+          <span>🍫 = ₱100</span>
+        </div>
+
+        <div class="spin-controls">
+          <p class="spin-cost-note">Each spin costs <strong>5 credits</strong></p>
+          <button id="btn-spin" class="btn btn-spin">🎰 ROLL SPIN</button>
+        </div>
+      </div>
+
+    </div><!-- /game-layout -->
+  </div>
+<!-- ── GLOBAL TOAST ── -->
+<div id="pm-toast" class="pm-toast hidden"></div>
+  <!-- ── POP MATCH GAME ──────────────────────────────── -->
+  <div id="screen-match" class="screen">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button id="btn-back-match" class="btn btn-sm">Back</button>
+        <div class="nickname-wrap">
+          <span class="nickname-display" id="match-nickname-display"></span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="credits-pill">
+          <span class="credits-label">CREDITS</span>
+          <span id="match-credits" class="credits-val">—</span>
+        </div>
+        <button id="pm-shop-btn" class="btn btn-sm pm-shop-btn-trigger">🛍️ Shop</button>
+      </div>
+    </header>
+
+    <div class="pm-scanlines"></div>
+
+    <main class="pm-container">
+
+      <!-- ── INLINE SHOP PANEL ── -->
+      <div id="pm-shop-panel" class="pm-shop-panel hidden">
+
+        <div class="pm-shop-inner">
+
+          <!-- Header -->
+          <div class="pm-shop-header">
+            <div class="pm-shop-title-row">
+              <span class="pm-shop-title">🛍️ PRESET SHOP</span>
+            </div>
+            <button id="pm-shop-close" class="pm-shop-close-btn">✕ Close</button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="pm-shop-tabs">
+            <button id="pm-shop-tab-color" class="pm-shop-tab pm-shop-tab-active">🎨 Color Themes</button>
+            <button id="pm-shop-tab-emoji" class="pm-shop-tab">😀 Emoji Packs</button>
+          </div>
+
+          <!-- Message toast -->
+          <div id="pm-shop-msg" class="pm-shop-msg"></div>
+
+          <!-- Color section -->
+          <div id="pm-shop-section-color" class="pm-shop-section">
+            <p class="pm-shop-section-desc">
+              Changes card borders, matched card color, and board glow.
+              Hover to preview live on the board below.
+            </p>
+            <div id="pm-shop-color-grid" class="pm-shop-grid"></div>
+          </div>
+
+          <!-- Emoji section -->
+          <div id="pm-shop-section-emoji" class="pm-shop-section hidden">
+            <p class="pm-shop-section-desc">
+              Replaces the symbols on all cards. Takes effect on your next game start.
+            </p>
+            <div id="pm-shop-emoji-grid" class="pm-shop-grid"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── CONFIRM DIALOG ── -->
+      <div id="pm-confirm-overlay" class="pm-confirm-overlay hidden">
+        <div class="pm-confirm-box">
+          <div class="pm-confirm-icon">🛒</div>
+          <h3 class="pm-confirm-title" id="pm-confirm-title">Confirm Purchase</h3>
+          <p class="pm-confirm-body" id="pm-confirm-body"></p>
+          <div class="pm-confirm-actions">
+            <button id="pm-confirm-yes" class="btn btn-primary">✅ Yes, Buy It!</button>
+            <button id="pm-confirm-no"  class="btn">✕ Cancel</button>
+          </div>
+        </div>
+      </div>
+
+  <!-- existing pm-shell stays here unchanged -->
+      <div class="pm-shell">
+        <div class="pm-game">
+          <h1 class="pm-title">POP MATCH</h1>
+
+          <div class="pm-stage-info">
+            STAGE <span id="pm-stageNum">1</span>
+          </div>
+
+          <!-- Credit info panel — below .pm-stage-info -->
+          <div class="pm-credit-info">
+            <div class="pm-credit-info-title"><span class="text-red">INFO:</span> Credits earned per stage cleared</div>
+            <div class="pm-credit-info-stages">
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">Stage 1</span>
+                <span class="pm-ci-val">+2</span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">Stage 2</span>
+                <span class="pm-ci-val">+4</span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">Stage 3</span>
+                <span class="pm-ci-val">+7</span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">Stage 4</span>
+                <span class="pm-ci-val">+12</span>
+              </div>
+              <div class="pm-credit-info-stage pm-ci-jackpot">
+                <span class="pm-ci-num">Stage 5</span>
+                <span class="pm-ci-val">+20</span>
+              </div>
+            </div>
+            <div class="pm-credit-info-footer">
+              <span class="pm-ci-pill pm-ci-pill-warn">📅 Daily cap: <b>50 cr</b></span>
+              <span class="pm-ci-pill">⚡ 2nd run: <b>60% rewards</b></span>
+              <span class="pm-ci-pill">📉 3rd: <b>30%</b> · 4th+: <b>10%</b></span>
+            </div>
+            <br>
+              <!-- Equipped theme row — populated by JS -->
+              <div class="pm-ci-equipped" id="pm-ci-equipped-row"></div>
+          </div>
+
+
+          <div class="pm-credit-info pm-stats-info">
+            <div class="pm-credit-info-stages pm-stage-stats">
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">TIME</span>
+                <span class="pm-ci-val"><span id="pm-timer">60</span></span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">SCORE</span>
+                <span class="pm-ci-val"><span id="pm-score">0</span></span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">HIGH</span>
+                <span class="pm-ci-val"><span id="pm-highScore">0</span></span>
+              </div>
+              <div class="pm-credit-info-stage">
+                <span class="pm-ci-num">COMBO</span>
+                <span class="pm-ci-val"><span id="pm-combo">x0</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="pm-stats">
+            <div class="pm-panel"><p>TIME</p><span id="pm-timer">60</span></div>
+            <div class="pm-panel"><p>SCORE</p><span id="pm-score">0</span></div>
+            <div class="pm-panel"><p>HIGH</p><span id="pm-highScore">0</span></div>
+            <div class="pm-panel"><p>COMBO</p><span id="pm-combo">x0</span></div>
+          </div> -->
+
+          <div id="pm-board" class="pm-board"></div>
+
+          <div class="pm-controls">
+            <button id="pm-mainBtn">START GAME</button>
+          </div>
+
+          <div id="pm-message" class="pm-message"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<div id="screen-lucky777" class="screen">
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <button id="btn-back-lucky777" class="btn btn-sm">Back</button>
+      <div class="nickname-wrap">
+        <span class="nickname-display" id="l7-nickname-display"></span>
+      </div>
+    </div>
+    <div class="top-bar-right">
+      <div class="credits-pill">
+        <span class="credits-label">CREDITS</span>
+        <span id="l7-credits" class="credits-val">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scanlines overlay (matches pop match aesthetic) -->
+  <div class="pm-scanlines"></div>
+
+  <!-- ── JACKPOT BONUS OVERLAY ── -->
+  <div id="l7-bonus-overlay" class="l7-bonus-overlay">
+    <div class="l7-bonus-box">
+      <div class="l7-bonus-header">
+        <span class="l7-bonus-crown">👑</span>
+        <h2 class="l7-bonus-title">JACKPOT BONUS!</h2>
+        <p class="l7-bonus-subtitle">
+          Triple 7s! Pick a box to reveal your multiplier.<br>
+          Bet was <strong id="l7-bonus-bet">—</strong> credits.
+        </p>
+      </div>
+      <div id="l7-bonus-picks" class="l7-bonus-picks"></div>
+    </div>
+  </div>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <main class="l7-layout">
+
+    <!-- LEFT COLUMN: reels + controls -->
+    <section class="l7-main-col">
+
+      <h1 class="l7-title">
+        <span class="l7-title-num">7</span>
+        <span class="l7-title-num">7</span>
+        <span class="l7-title-num">7</span>
+        <span class="l7-title-word">LUCKY</span>
+      </h1>
+
+      <!-- Result banner -->
+      <div id="l7-result-banner" class="l7-result-banner">
+        <span id="l7-result-text"></span>
+      </div>
+
+      <!-- ── SLOT MACHINE ── -->
+      <div class="l7-machine">
+
+        <!-- Reel window -->
+        <div class="l7-reels-frame">
+          <!-- Payline indicator -->
+          <div class="l7-payline-bar"></div>
+
+          <div class="l7-reels">
+            <div class="l7-reel-col">
+              <div id="l7-reel-0" class="l7-reel"></div>
+            </div>
+            <div class="l7-reel-divider"></div>
+            <div class="l7-reel-col">
+              <div id="l7-reel-1" class="l7-reel"></div>
+            </div>
+            <div class="l7-reel-divider"></div>
+            <div class="l7-reel-col">
+              <div id="l7-reel-2" class="l7-reel"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bet selector -->
+        <div class="l7-bet-section">
+          <span class="l7-bet-label">BET AMOUNT</span>
+          <div id="l7-bet-selector" class="l7-bet-selector"></div>
+        </div>
+
+        <!-- Spin controls -->
+        <div class="l7-controls">
+          <button id="l7-spin-btn" class="l7-spin-btn">🎰 SPIN · 5 cr</button>
+          <button id="l7-freespin-btn" class="l7-freespin-btn" disabled>
+            🎁 Free Spin
+            (<span id="l7-freespins-count">0</span> left)
+          </button>
+        </div>
+
+      </div><!-- /l7-machine -->
+
+      <!-- ── WIN STREAK ── -->
+      <div class="l7-streak-panel">
+        <div class="l7-streak-item">
+          <span class="l7-streak-label">WIN STREAK</span>
+          <span class="l7-streak-val" id="l7-streak">0</span>
+          <span id="l7-streak-fire" class="l7-streak-fire"></span>
+        </div>
+        <div class="l7-streak-item">
+          <span class="l7-streak-label">BEST STREAK</span>
+          <span class="l7-streak-val" id="l7-best-streak">0</span>
+        </div>
+        <div class="l7-streak-item l7-streak-bonus-hint">
+          <span class="l7-streak-label">STREAK BONUS</span>
+          <div class="l7-streak-tiers">
+            <span class="l7-streak-tier">🔥 3+ = <b>1.5×</b></span>
+            <span class="l7-streak-tier">🔥🔥🔥 5+ = <b>2×</b></span>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /l7-main-col -->
+
+    <!-- RIGHT COLUMN: paytable + leaderboard -->
+    <aside class="l7-side-col">
+
+      <!-- Pay Table -->
+      <div class="l7-panel">
+        <h3 class="l7-panel-title">📋 PAY TABLE</h3>
+        <p class="l7-panel-sub">Multiplied by your bet. Payline = middle row.</p>
+        <table class="l7-paytable">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>×3</th>
+              <th>×2</th>
+            </tr>
+          </thead>
+          <tbody id="l7-paytable-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Leaderboard (best streak) -->
+      <div class="l7-panel">
+        <h3 class="l7-panel-title">🏆 STREAK BOARD</h3>
+        <p class="l7-panel-sub">Best win streak — all time.</p>
+        <div id="l7-leaderboard-list" class="l7-leaderboard-list">
+          <div class="l7-lb-loading">Loading…</div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+</div>
+<!-- /screen-lucky777 -->
+
+  <!-- AFTER — no change needed! The script tag stays exactly the same. -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
