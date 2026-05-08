@@ -297,15 +297,16 @@ html, body {
   gap: 16px;
   margin-bottom: 24px;
 }
-.logo-icon { font-size: 3.5rem; }
+.logo-icon { font-size: 3rem; }
 .logo-title {
   font-family: 'Bungee Shade', cursive;
-  font-size: 2.2rem;
+  font-size: 1.95rem;
   line-height: 1;
   color: var(--accent);
   text-align: left;
 }
 .logo-year { color: var(--accent2); font-family: 'Bungee Shade', cursive; }
+.logo-ver { color: var(--accent3); font-family: 'Bungee Shade', cursive; font-size: .65em; }
 .auth-tagline {
   color: var(--muted);
   font-size: .85rem;
