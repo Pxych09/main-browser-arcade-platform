@@ -3,12 +3,12 @@
 // ═══════════════════════════════════════════════════
 
 export const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyCp_FRyk-SRUr_tHqwRa6jZBclW9U-hJwQ",
-  authDomain:        "fruit-game-2026.firebaseapp.com",
-  projectId:         "fruit-game-2026",
-  storageBucket:     "fruit-game-2026.firebasestorage.app",
-  messagingSenderId: "1007167234923",
-  appId:             "1:1007167234923:web:b99d77476bc132a544a22e",
+  apiKey: "AIzaSyC7tidcBNCDDQMMgRXrZrPmWqOB2y2e3VU",
+  authDomain: "web-retro-platform.firebaseapp.com",
+  projectId: "web-retro-platform",
+  storageBucket: "web-retro-platform.firebasestorage.app",
+  messagingSenderId: "914342980305",
+  appId: "1:914342980305:web:26bd5f2cbd45887591b3f0"
 };
 
 export const GAME_CONFIG = {
